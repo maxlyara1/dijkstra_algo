@@ -11,7 +11,6 @@ Mn <- function(R, A){
 }
 
 Dijkstra <- function(M, v1, v2){
-  #cheeck_mat(M)
   n <- ncol(M)
   answer <- list()
   
@@ -24,9 +23,6 @@ Dijkstra <- function(M, v1, v2){
   else if (v1 == v2) {
     stop("Введите разные вершины")
   }
-  else {
-    stop('Неизвестная ошибка')
-  }
   
   R <- M[v1, ]
   A <- rep(0, n)
@@ -37,10 +33,10 @@ Dijkstra <- function(M, v1, v2){
   while (sum(A) != length(A)){
     k <- Mn(R, A)
     if (k == "") {
-        break
+      break
     }
-
-    for (i in (1:n)) { #???
+    
+    for (i in (1:n)) {
       if (R[i] > (R[k] + M[k, i])){
         R[i] <- R[k] + M[k, i]
         P[i] <- k
@@ -66,22 +62,42 @@ Dijkstra <- function(M, v1, v2){
   answer <- list(length = R[v2], path = path)
   return(answer)
 }
+#my_data = c(Inf, Inf, 5, 1,
+            #Inf, Inf, Inf, 1,
+            #Inf, 1, Inf, 3,
+            #Inf, Inf, Inf, Inf)
+map <- matrix(0, ncol = 11, nrow = 11)
+map[1,2] <- 10
+map[1,3] <- 4
+map[1,4] <- 8
+map[2,3] <- 8
+map[2,5] <- 6
+map[3,4] <- 4
+map[3,5] <- 7
+map[4,7] <- 7
+map[4,6] <- 10
+map[4,8] <- 7
+map[8,6] <- 7
+map[8,10] <- 6
+map[10,6] <- 11
+map[6,9] <- 4
+map[10,9] <- 12
+map[6,11] <- 5
+map[5,4] <- 8
+map[4,11] <- 13
+map[9,11] <- 5
 
-M <- matrix(0, nrow = 4, ncol = 4)
-M[1,] <- c(Inf, Inf, 1, 5)
-M[2,] <- c(Inf, Inf, Inf, 1)
-M[3,] <- c(Inf, 1, Inf, 3)
-M[4,] <- c(Inf, Inf, Inf, Inf)
-
-Dijkstra(M, 1, 4)
+func_res <- Dijkstra(map, 1, 4)
+print(func_res)
 
 
 #график
+install.packages('igraph')
 library('igraph')
-set.seed(1)
-g <- M
+set.seed(42)
+g <- map
 g[g == Inf] <- 0
 a <- graph.adjacency(g, mode = "directed", weighted = T)
-plot.igraph(a, edge.label = c(t(g)[t(g) != 0]),
+plot(a, edge.label = c(t(g)[t(g) != 0]),
             edge.arrow.size = 0.5, layout = layout_in_circle)
-plot.igraph(a, edge.label = c(t(g)[t(g) != 0]), edge.arrow.size = 0.5)
+plot(a, edge.label = c(t(g)[t(g) != 0]), edge.arrow.size = 0.5)
