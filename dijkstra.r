@@ -1,6 +1,6 @@
 Mn <- function(R, A){
   min <- Inf
-  m <- "clown"
+  m <- ""
   for (i in 1:length(A)){
     if ((R[i] < min) & (A[i] == 0)){
       m <- i
@@ -15,20 +15,17 @@ Dijkstra <- function(M, v1, v2){
   n <- ncol(M)
   answer <- list()
   
-  if (!(v1 %in% (1:n))){
-    stop("takaya vershina ne syshestvuet")
+  if (!(v1 %in% (1:n)) || !(v2 %in% (1:n))){
+    stop("Такой вершины не существует")
   }
-  if (!(is.numeric(v1))){
-    stop("vershina dolzhna zadavatsya chislom")
+  else if (!(is.numeric(v1) || !(is.numeric(v2)))){
+    stop("Вершина должна задаваться числом")
   }
-  if (!(v2 %in% (1:n))){
-    stop("takaya vershina ne syshestvuet")
+  else if (v1 == v2) {
+    stop("Введите разные вершины")
   }
-  if (!(is.numeric(v2))){
-    stop("vershina dolzhna zadavatsya chislom")
-  }
-  if (v1 == v2) {
-    stop("nuzhno vvesti raznie vershini")
+  else {
+    stop('Неизвестная ошибка')
   }
   
   R <- M[v1, ]
@@ -39,8 +36,10 @@ Dijkstra <- function(M, v1, v2){
   
   while (sum(A) != length(A)){
     k <- Mn(R, A)
-    if (k == "clown") {break()}
-    
+    if (k == "") {
+        break
+    }
+
     for (i in (1:n)) { #???
       if (R[i] > (R[k] + M[k, i])){
         R[i] <- R[k] + M[k, i]
