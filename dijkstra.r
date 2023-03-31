@@ -66,28 +66,15 @@ Dijkstra <- function(M, v1, v2){
             #Inf, Inf, Inf, 1,
             #Inf, 1, Inf, 3,
             #Inf, Inf, Inf, Inf)
-map <- matrix(0, ncol = 11, nrow = 11)
-map[1,2] <- 10
-map[1,3] <- 4
-map[1,4] <- 8
-map[2,3] <- 8
-map[2,5] <- 6
-map[3,4] <- 4
-map[3,5] <- 7
-map[4,7] <- 7
-map[4,6] <- 10
-map[4,8] <- 7
-map[8,6] <- 7
-map[8,10] <- 6
-map[10,6] <- 11
-map[6,9] <- 4
-map[10,9] <- 12
-map[6,11] <- 5
-map[5,4] <- 8
-map[4,11] <- 13
-map[9,11] <- 5
+M <- matrix(0, nrow = 4, ncol = 4)
+M[1,] <- c(Inf, Inf, 1, 5)
+M[2,] <- c(Inf, Inf, Inf, 1)
+M[3,] <- c(Inf, 1, Inf, 3)
+M[4,] <- c(Inf, Inf, Inf, Inf)
 
-func_res <- Dijkstra(map, 1, 4)
+Dijkstra(M, 1, 4)
+
+func_res <- Dijkstra(M, 1, 4)
 print(func_res)
 
 
@@ -95,7 +82,7 @@ print(func_res)
 install.packages('igraph')
 library('igraph')
 set.seed(42)
-g <- map
+g <- M
 g[g == Inf] <- 0
 a <- graph.adjacency(g, mode = "directed", weighted = T)
 plot(a, edge.label = c(t(g)[t(g) != 0]),
