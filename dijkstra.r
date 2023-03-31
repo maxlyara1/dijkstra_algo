@@ -3,7 +3,7 @@ install.packages('igraph')
 library('igraph')
 
 # Функция проверки на то, есть ли в принципе путь к вершине и не посещена ли она
-Mn <- function(R, expl_v){
+access_check <- function(R, expl_v){
   min <- Inf
   m <- ""
   for (i in 1:length(expl_v)){
@@ -15,6 +15,7 @@ Mn <- function(R, expl_v){
   return(m)
 }
 
+# Основная функция
 Dijkstra <- function(Matr, v1, v2){
   n <- ncol(Matr)
   answer <- list()
@@ -30,7 +31,8 @@ Dijkstra <- function(Matr, v1, v2){
     stop("Введите разные вершины")
   }
   
-  # Длины путей(веса ребёр) от 
+  
+  # Длины путей(веса ребёр) от начального ребра к соответствующим вершинам
   R <- Matr[v1, ]
   
   # expl_v используется для указания того, рёбра от каких вершин мы рассмотрели
@@ -45,7 +47,7 @@ Dijkstra <- function(Matr, v1, v2){
   # пока количество рассмотренных вершин не равно количеству доступных для 
   #рассмотрения вершин 
   while (sum(expl_v) != length(expl_v)){
-    k <- Mn(R, expl_v)
+    k <- access_check(R, expl_v)
     if (k == "") {
       break
     }
@@ -59,6 +61,8 @@ Dijkstra <- function(Matr, v1, v2){
     }
   }
   
+  # Проверяем, есть ли путь к конечной вершине и строим путь, если он есть, 
+  #или устанавливаем путь Inf, если пути нет
   if (vis_v[v2] != 0){
     path <- v2
     if (vis_v[v2] == v1){
@@ -77,7 +81,7 @@ Dijkstra <- function(Matr, v1, v2){
   #Длина пути
   length = R[v2]
   
-  # Рисование графика
+  # Рисование графа и кратчайшего пути
   set.seed(42)
   g <- Matr
   g[g == Inf] <- 0
@@ -86,8 +90,8 @@ Dijkstra <- function(Matr, v1, v2){
   for(i in 1:(length-1)){
     E(a)[path[i+1]%--%path[i]]$color <- 'red'
   }
-  plot(a, edge.label = c(t(g)[t(g) != 0]),
-       edge.arrow.size = 0.5, layout = layout_in_circle)
+  #plot(a, edge.label = c(t(g)[t(g) != 0]),
+       #edge.arrow.size = 0.5, layout = layout_in_circle)
   plot(a, edge.label = c(t(g)[t(g) != 0]), edge.arrow.size = 0.5)
     
   answer <- list(length, path)
