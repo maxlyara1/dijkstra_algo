@@ -2,17 +2,17 @@
 install.packages('igraph')
 library('igraph')
 
-
-Mn <- function(R, vis_v){
+# Функция проверки на то, есть ли в принципе путь к вершине и не посещена ли она
+Mn <- function(R, expl_v){
   min <- Inf
-  Matr <- ""
-  for (i in 1:length(vis_v)){
-    if ((R[i] < min) & (vis_v[i] == 0)){
-      Matr <- i
+  m <- ""
+  for (i in 1:length(expl_v)){
+    if ((R[i] < min) & (expl_v[i] == 0)){
+      m <- i
       min <- R[i]
     }
   }
-  return(Matr)
+  return(m)
 }
 
 Dijkstra <- function(Matr, v1, v2){
@@ -30,15 +30,22 @@ Dijkstra <- function(Matr, v1, v2){
     stop("Введите разные вершины")
   }
   
-  
+  # Длины путей(веса ребёр) от 
   R <- Matr[v1, ]
-  vis_v <- rep(0, n)
-  vis_v[v1] <- 1
-  P <- rep(0, n)
-  P[(Matr[v1, ] != Inf)] <- v1
   
-  while (sum(vis_v) != length(vis_v)){
-    k <- Mn(R, vis_v)
+  # expl_v используется для указания того, рёбра от каких вершин мы рассмотрели
+  expl_v <- rep(0, n)
+  expl_v[v1] <- 1
+  
+  # на каждой итерации в vis_v записывается те вершины, пути к которым были 
+  #доступны из рассматриваемой вершины
+  vis_v <- rep(0, n)
+  vis_v[(Matr[v1, ] != Inf)] <- v1
+  
+  # пока количество рассмотренных вершин не равно количеству доступных для 
+  #рассмотрения вершин 
+  while (sum(expl_v) != length(expl_v)){
+    k <- Mn(R, expl_v)
     if (k == "") {
       break
     }
@@ -46,21 +53,21 @@ Dijkstra <- function(Matr, v1, v2){
     for (i in (1:n)) {
       if (R[i] > (R[k] + Matr[k, i])){
         R[i] <- R[k] + Matr[k, i]
-        P[i] <- k
+        vis_v[i] <- k
       }
-      vis_v[k] <- 1
+      expl_v[k] <- 1
     }
   }
   
-  if (P[v2] != 0){
+  if (vis_v[v2] != 0){
     path <- v2
-    if (P[v2] == v1){
+    if (vis_v[v2] == v1){
       path <- c(v1, v2)
     }
     else{
-      while (P[v2] != v1){
-        P[v2] <- P[path[1]]
-        path <- c(P[v2], path)
+      while (vis_v[v2] != v1){
+        vis_v[v2] <- vis_v[path[1]]
+        path <- c(vis_v[v2], path)
       }
     }
   }
