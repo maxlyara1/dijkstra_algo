@@ -86,7 +86,7 @@ Dijkstra <- function(Matr, v1, v2){
       }
     }
   }
-  # Если невозможно было дойти до конечной вершины - выведится path=Inf
+  # Если невозможно было дойти до конечной вершины - выводится path=Inf
   else{
     path <- Inf
   }
@@ -99,8 +99,8 @@ Dijkstra <- function(Matr, v1, v2){
   g[g == Inf] <- 0
   a <- graph.adjacency(g, mode = "directed", weighted = T)
   E(a)$color <- 'grey'
-  for(i in 1:(length-1)){
-    E(a)[path[i+1]%--%path[i]]$color <- 'red'
+  for(i in 1:length(path)-1){
+    E(a)[path[i]%--%path[i+1]]$color <- 'red'
   }
   plot(a, edge.label = c(t(g)[t(g) != 0]))
     
@@ -110,11 +110,12 @@ Dijkstra <- function(Matr, v1, v2){
 
 
 Matr <- matrix(0, nrow = 4, ncol = 4)
-Matr[1,] <- c(Inf, 1, 3, 5)
-Matr[2,] <- c(Inf, Inf, 3, 1)
-Matr[3,] <- c(Inf, Inf, Inf, 2)
+Matr[1,] <- c(Inf, 3, 1, 5)
+Matr[2,] <- c(Inf, Inf, Inf, 1)
+Matr[3,] <- c(Inf, 1, Inf, 3)
 Matr[4,] <- c(Inf, Inf, Inf, Inf)
 
 
 func_res <- Dijkstra(Matr, 1, 4)
-cat('Длина пути:', func_res[[1]], '\n', 'Путь:', func_res[[2]], '\n')
+cat('Длина пути(количество посещённых ребер):', 
+    func_res[[1]], '\n', 'Путь(перечисленные вершины):', func_res[[2]], '\n')
