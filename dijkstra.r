@@ -47,7 +47,9 @@ Dijkstra <- function(Matr, v1, v2){
   
   # пока количество рассмотренных вершин не равно количеству доступных для 
   #рассмотрения вершин 
-  while (sum(expl_v) != length(expl_v) && k != ""){
+  while (sum(expl_v) != length(expl_v)){
+    
+    #k <- индекс ближайшей доступной вершины
     k <- shortest_ind(shortest_dist, expl_v)
     
     # На успешной итерации в shortest_dist обновляются длины кратчайших путей от начальной 
