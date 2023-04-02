@@ -8,15 +8,15 @@ Dijkstra <- function(Matr, v1, v2){
   # Функция проверки на то, есть ли путь(ребро) к вершине и не посещена ли она
   shortest_ind <- function(shortest_dist, expl_v){
     min <- Inf
-    m <- ""
+    ind_nearest_v <- ""
     for (i in 1:length(expl_v)){
       if ((shortest_dist[i] < min) & (expl_v[i] == 0)){
-        m <- i
+        ind_nearest_v <- i
         min <- shortest_dist[i]
       }
     }
     # индекс ближайшей доступной вершины
-    return(m)
+    return(ind_nearest_v)
   }
   
   # Количество вершин
@@ -50,21 +50,21 @@ Dijkstra <- function(Matr, v1, v2){
   #рассмотрения вершин 
   while (sum(expl_v) != length(expl_v)){
     
-    #k <- индекс ближайшей доступной вершины
-    k <- shortest_ind(shortest_dist, expl_v)
+    #index_nearest_v <- индекс ближайшей доступной вершины
+    index_nearest_v <- shortest_ind(shortest_dist, expl_v)
     
-    if (k == "") {
+    if (index_nearest_v == "") {
       break
     }
     
     # На успешной итерации(если сработал if) в shortest_dist обновляются длины 
     #кратчайших путей от начальной вершины до всех вершин, доступных для посещения
     for (i in (1:n)) {
-      if (shortest_dist[i] > (shortest_dist[k] + Matr[k, i])){
-        shortest_dist[i] <- shortest_dist[k] + Matr[k, i]
-        vis_v[i] <- k
+      if (shortest_dist[i] > (shortest_dist[index_nearest_v] + Matr[index_nearest_v, i])){
+        shortest_dist[i] <- shortest_dist[index_nearest_v] + Matr[index_nearest_v, i]
+        vis_v[i] <- index_nearest_v
       }
-      expl_v[k] <- 1
+      expl_v[index_nearest_v] <- 1
     }
   }
   
